@@ -1,0 +1,76 @@
+- name: update ownership of blog directory
+  file: path={{ app_root }}/app
+        owner={{ app_user }}
+        recurse=yes
+        state=directory
+
+- name: install grunt cli
+  npm: name=grunt-cli
+       global=yes
+  become: true
+
+- name: Install ghost dependencies.
+  npm: path={{ app_root }}/app
+       production=no
+  become: true
+
+- name: Build assets with Grunt
+  command: grunt init
+  args:
+   chdir: "{{ app_root }}/app"
+
+- name: Minify assets with Grunt
+  command: grunt prod
+  args:
+   chdir: "{{ app_root }}/app"
+  when: env != 'local'
+
+- name: Add ghost config.
+  template: src=opt/apps/app/config.js
+            dest={{ app_root }}/app/config.js
+            owner={{ app_user }}
+            mode=0644
+  become: true
+  notify:
+    - supervisor restart
+
+- name: Make sure storgage module directory exists.
+  file: dest={{ app_root }}/app/content/storage/ghost-s3/
+        state=directory
+
+- name: Enable s3 storage module.
+  copy: src=opt/apps/app/content/storage/ghost-s3/index.js
+        dest={{ app_root }}/app/content/storage/ghost-s3/index.js
+        owner={{ app_user }}
+        mode=0644
+  notify:
+    - supervisor restart
+
+- name: Add supervisor config.
+  template: src=etc/supervisor/conf.d/app.conf
+            dest=/etc/supervisor/conf.d/{{ app_name }}.conf
+            owner={{ app_user }}
+            mode=0644
+  notify:
+    - supervisor restart
+
+- name: Add nginx site.
+  template: src=etc/nginx/sites-available/site
+            dest=/etc/nginx/sites-available/{{ app_name }}
+            owner={{ app_user }}
+            mode=0644
+  notify:
+      - nginx restart
+
+- name: Enable nginx site.
+  file: src=/etc/nginx/sites-available/{{ app_name }}
+        dest=/etc/nginx/sites-enabled/{{ app_name }}
+        owner={{ app_user }}
+        mode=0644
+        state=link
+  notify:
+    - nginx restart
+
+- name: Restart App.
+  supervisorctl: name={{ app_name }}.{{ env }}:app
+                 state=restarted

@@ -1,0 +1,29 @@
+- hosts: all
+  remote_user: "{{ host_user|default('ubuntu') }}"
+  become: True
+  vars_files:
+    - '../envs/{{ env }}/settings.yml'
+    - '../envs/{{ env }}/secrets.yml'
+  roles:
+    - { role: "./roles/.external/minimal" }
+
+- hosts: postgresql
+  remote_user: '{{ app_user }}'
+  become: True
+  vars_files:
+    - '../envs/{{ env }}/settings.yml'
+    - '../envs/{{ env }}/secrets.yml'
+  tags:
+    - test
+  roles:
+    - { role: "./roles/.external/postgresql", when: env != 'production' }
+
+- hosts: app
+  remote_user: '{{ app_user }}'
+  become: True
+  vars_files:
+    - '../envs/{{ env }}/settings.yml'
+    - '../envs/{{ env }}/secrets.yml'
+  roles:
+    - git-deployed-app
+    - ghost

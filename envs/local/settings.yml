@@ -1,0 +1,27 @@
+---
+app_name: "pibblegear"
+database_name: "pibblegear"
+app_root: "/opt/apps/pibblegear"
+
+# Keep alphabetized below this line.
+alert_recipient: "kyle@gmail.com"
+app_user: "pibble"
+app_user_id: "10001"
+git_branch: "pibblegear-master"
+git_repo: https://github.com/kylefdoherty/Ghost.git
+host_user: "vagrant"
+workspace: /root
+server_name: "pibblegear.com"
+aws_access_key_id: ""
+aws_secret_access_key: ""
+aws_storage_bucket_name: ""
+aws_storage_bucket_region: "us-east-1"
+postgresql_ip: "127.0.0.1"
+postgresql_password: "password"
+postgresql_user: "pibble"
+ssh_password: "password"
+ssh_pub_key: ssh-rsa
+ssh_key_type: id_rsa
+ssh_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  -----END RSA PRIVATE KEY-----

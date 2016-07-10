@@ -1,0 +1,31 @@
+- name: minimal
+  src: git+ssh://github.com/myollie/ansible-minimal.git
+  version: master
+
+- name: monit
+  src: git+ssh://github.com/myollie/ansible-monit.git
+  version: master
+
+- name: postgresql
+  src: git+ssh://github.com/myollie/ansible-postgresql.git
+  version: master
+
+- name: nginx
+  src: git+ssh://github.com/myollie/ansible-nginx.git
+  version: master
+
+- name: python2.7
+  src: git+ssh://github.com/myollie/ansible-python2.7.git
+  version: master
+
+- name: supervisor
+  src: git+ssh://github.com/myollie/ansible-supervisor.git
+  version: master
+
+- name: node
+  src: git+ssh://github.com/myollie/ansible-node.git
+  version: master
+
+- name: git-deployed-app
+  src: git+ssh://github.com/myollie/ansible-git-deployed-app.git
+  version: master
